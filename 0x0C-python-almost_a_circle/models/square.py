@@ -1,97 +1,72 @@
 #!/usr/bin/python3
-"""Defines a class Square"""
-
-
-from inspect import classify_class_attrs
+"""
+Defines a square class.
+"""
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    """Class that defines properties of Square.
-
-     Attributes:
-        width (int): width of rectangle.
-        height (int): height of rectangle.
-        x (int): x.
-        y (int): y.
-        id (int): identity of square.
     """
-    def __init__(self, size, x=0, y=0, id=None):
-        """Creates new instances of Square
+    Represent a square.
+    """
 
-        Args:
-            size (int): width and height of square.
-            x (int, optional): x. Defaults to 0.
-            y (int, optional): y. Defaults to 0.
-            id (int, optional): Identity number of square. Defaults to None.
+    def __init__(self, size, x=0, y=0, id=None):
+        """
+        Initialize a new Square.
         """
         super().__init__(size, size, x, y, id)
 
-    def __str__(self):
-        """Prints square"""
-        return ("[Square] ({}) {:d}/{:d} - {:d}".
-                format(self.id, self.x, self.y, self.size))
-
     @property
     def size(self):
-        """Property retriever for size.
-
-        Returns:
-            int: size of one side of square.
-        """
+        """Get/set the size of the Square."""
         return self.width
 
     @size.setter
     def size(self, value):
-        """Property setter for width of square.
-        Args:
-            value (int): width of square.
-        Raises:
-            TypeError: if width is not an integer.
-            ValueError: if width is less than or equal to zero.
-        """
-        if not isinstance(value, int):
-            raise TypeError("width must be an integer")
-        if value <= 0:
-            raise ValueError("width must be > 0")
-        
         self.width = value
         self.height = value
 
     def update(self, *args, **kwargs):
-        """Assigns an argument to each attribute
-
-        Args:
-            *args (tuple): arguments.
-            **kwargs (dict): double pointer to a dictionary.
         """
-        if args is not None and len(args) is not 0:
-            list_atr = ['id', 'size', 'x', 'y']
-            for i in range(len(args)):
-                if list_atr[i] == 'size':
-                    setattr(self, 'width', args[i])
-                    setattr(self, 'height', args[i])
-                else:
-                    setattr(self, list_atr[i], args[i])
-        else:
+        Update the Square.
+        """
+        if args and len(args) != 0:
+            for count, arg in enumerate(args):
+                if count == 0:
+                    self.id = arg
+                elif count == 1:
+                    self.size = arg
+                elif count == 2:
+                    self.x = arg
+                elif count == 3:
+                    self.y = arg
+                else: continue
+
+        elif len(kwargs) > 0:
             for key, value in kwargs.items():
-                if key == 'size':
-                    setattr(self, 'width', value)
-                    setattr(self, 'height', value)
-                else:
-                    setattr(self, key, value)
+                if key == "id":
+                    self.id = value
+                elif key == "size":
+                    self.size = value
+                elif key == "x":
+                    self.x = value
+                elif key == "y":
+                    self.y = value
+                # removed the break statement, incase if the passed args are greater
+                # than 5, and one of the attributes is at the end
 
     def to_dictionary(self):
-        """Returns the dictionary representation of a Square.
+        """Return the dictionary representation of the Square."""
+        square_dict = {
+            "id": self.id,
+            "size": self.width,
+            "x": self.x,
+            "y": self.y
+        }
 
-        Returns:
-            dict: square.
-        """
-        dict1 = self.__dict__
-        dict2 = {}
-        dict2['id'] = dict1['id']
-        dict2['size'] = dict1['_Rectangle__width']
-        dict2['x'] = dict1['_Rectangle__x']
-        dict2['y'] = dict1['_Rectangle__y']
+        return square_dict
 
-        return dict2
+    def __str__(self):
+        """Return the print() and str() representation of a Square."""
+        return "[Square] ({}) {}/{} - {}".format(self.id, self.x, self.y,
+                                                 self.width)
