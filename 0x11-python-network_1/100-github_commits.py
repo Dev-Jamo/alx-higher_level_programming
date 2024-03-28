@@ -3,19 +3,24 @@
 Python script that shows the last 10 commits of a repository
 in GitHub
 """
-from requests import get, auth
-import sys
 
+if __name__ == '__main__':
+    from requests import get
+    from sys import argv
 
-if __name__ == "__main__":
-    try:
-        repo = sys.argv[1]
-        owner = sys.argv[2]
-        url = 'https://api.github.com/repos/{}/{}/commits'.format(owner, repo)
-        r = get(url)
-        json_o = r.json()
-        for i in range(0, 10):
-            print("{}: {}".format(json_o[i].get('sha'), json_o[i].get('commit')
-                                  .get('author').get('name')))
-    except:
-        pass
+    repo = argv[1]
+    owner = argv[2]
+    i = 0
+
+    URL = "https://api.github.com/repos/{}/{}/commits".format(owner, repo)
+
+    response = get(URL)
+    json = response.json()
+
+    for element in json:
+        if i > 9:
+            break
+        sha = element.get('sha')
+        author = element.get('commit').get('author').get('name')
+        print("{}: {}".format(sha, author))
+        i += 1
